@@ -2,10 +2,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface LocalLogsState {
     currentLog: string | null;
+    currentLogFileName: string | null;
 }
 
 const initialState: LocalLogsState = {
     currentLog: null,
+    currentLogFileName: null,
 }
 
 export const localLogSlice = createSlice({

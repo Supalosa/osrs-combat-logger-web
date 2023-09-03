@@ -26,7 +26,7 @@ function App() {
           dispatch(setLog(logs));
         }} />
 
-        {!!currentLog && <>
+        {currentLog != null && <>
           <Divider />
           <LogViewer />
         </>}

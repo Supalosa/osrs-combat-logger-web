@@ -6,7 +6,7 @@ import { RawLogViewer } from "./RawLogViewer";
 type LogViewerProps = {
 }
 
-export const LogViewer = (props: LogViewerProps) => {
+export const LogViewer = (_props: LogViewerProps) => {
     const currentLog = useAppSelector((state) => state.logs.currentLog);
 
     const parsedLogEntries = useMemo(() => {

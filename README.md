@@ -1,27 +1,17 @@
-# React + TypeScript + Vite
+# OSRS Combat Logs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cc8b6f30-040c-4b3f-a636-348c73d457ea/deploy-status)](https://app.netlify.com/sites/osrs-combat-logs/deploys)
 
-Currently, two official plugins are available:
+Static hosted tool for analysing combat logs from the OSRS Combat Logs. Built using Vite template with the React plugin, using Redux. Deployed on Netlify.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Developer Setup
 
-## Expanding the ESLint configuration
+Requires Node 16+.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Clone the repo, then:
 
-- Configure the top-level `parserOptions` property like this:
+    npm install
+    npm run dev
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+The site will be hosted at https://osrs-combat-logs.netlify.app/.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

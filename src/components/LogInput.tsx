@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Button, Container, Header, Input, Progress, Segment, Sticky } from "semantic-ui-react";
+import { useState } from "react";
+import { Button, Header, Input, Progress, Segment } from "semantic-ui-react";
 
 type LogInputProps = {
     onLogUploaded: (logContents: string) => void;
@@ -11,7 +11,6 @@ type Progress = {
 }
 
 export const LogInput = ({ onLogUploaded }: LogInputProps) => {
-    const ref = useRef();
 
     const [files, setFiles] = useState<FileList | null>(null);
     const [progress, setProgress] = useState<Progress | null>(null);

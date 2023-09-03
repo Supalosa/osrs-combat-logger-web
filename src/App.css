@@ -4,19 +4,17 @@
   --light-grey: #999999;
 }
 
-body {
-  background: var(--dark-grey);
-  color: #FFFFFF;
-}
-
 #root {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
-.ui.input > input, .ui.input > input:active {
-  background: var(--mid-grey);
-  color: #FFFFFF;
-  -webkit-tap-highlight-color: var(--light-grey);
+body {
+  /* Overwrite semantic-ui 'center' which scuffs scrolling for long tables */
+  place-items: stretch normal !important;
+}
+
+.main-content {
+  margin-top: 6em;
 }

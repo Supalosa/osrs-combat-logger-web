@@ -1,28 +1,36 @@
-import { Log } from './components/Log';
+import { LogViewer } from './components/LogViewer';
+import { LogInput } from './components/LogInput';
+import { Container, Divider, Menu } from 'semantic-ui-react';
+import { useAppDispatch, useAppSelector } from './hooks';
+import { setLog } from './redux/localLogs';
 
 import 'semantic-ui-css/semantic.min.css';
 import './App.css'
-import { useState } from 'react';
-import { LogInput } from './components/LogInput';
-import { increment, decrement } from './counterSlice';
-import { Button } from 'semantic-ui-react';
-import { useAppDispatch, useAppSelector } from './hooks';
 
 
 function App() {
-  const [log, setLog] = useState("");
-  const count = useAppSelector((state) => state.counter.value);
   const dispatch = useAppDispatch();
+  const currentLog = useAppSelector((state) => state.logs.currentLog);
 
   return (
     <>
-      <LogInput onLogUploaded={() => {
-        setLog("true");
-      }} />
-      <Log log={log} />
-      <p>Count is {count}</p>
-      <Button content="increment" onClick={() => dispatch(increment())} />
-      <Button content="decrement" onClick={() => dispatch(decrement())} />
+      <Menu fixed='top' inverted>
+        <Container>
+          <Menu.Item as='a' header>
+            <span>OSRS Combat Logs</span>
+          </Menu.Item>
+        </Container>
+      </Menu>
+      <Container className="main-content">
+        <LogInput onLogUploaded={(logs) => {
+          dispatch(setLog(logs));
+        }} />
+
+        {!!currentLog && <>
+          <Divider />
+          <LogViewer />
+        </>}
+      </Container>
     </>
   )
 }

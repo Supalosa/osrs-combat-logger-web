@@ -1,10 +1,10 @@
 
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from './counterSlice';
+import localLogsReducer from './redux/localLogs';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    logs: localLogsReducer,
   },
 });
 

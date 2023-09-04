@@ -56,7 +56,7 @@ export const LogViewer = (_props: LogViewerProps) => {
     }
 
     return <>
-        <p>Analyzing a log:</p>
+        <p>Analyzing a log!</p>
         <Tab panes={panes} />
     </>
 }

@@ -4,10 +4,10 @@ type RawLogEntryProps = {
     entry: any;
 }
 
-const renderExtra = (entry) => {
+const renderExtra = (entry: any) => {
     const { type, payload } = entry;
     if (type === 'LogPlayerMoved') {
-        const { x, y, plane, regionId } = payload.newPosition;
+        const { plane, regionId } = payload.newPosition;
         return <Image src={`https://cdn-osrs-combat-logs.netlify.app/${plane}/region-${regionId}.png`} />;
     }
     return null;

@@ -1,9 +1,13 @@
-import { Accordion, Message, Tab } from "semantic-ui-react"
 import { useAppSelector } from "../hooks";
 import { useMemo, useState } from "react";
 import { RawLogViewer } from "./RawLogViewer";
+import { Accordion, Alert, Tabs } from "@mantine/core";
+import { MapViewer } from "./MapViewer";
 
-const tryParseLogFile = (log: string | null, onError: (error: string, detail?: string) => void) => {
+const tryParseLogFile = (
+    log: string | null,
+    onError: (error: string, detail?: string) => void
+) => {
     if (!log) {
         onError("Empty log file provided.");
         return null;
@@ -14,49 +18,69 @@ const tryParseLogFile = (log: string | null, onError: (error: string, detail?: s
         if (typeof err === "string") {
             onError(err);
         } else if (err instanceof Error) {
-            onError("Unprocessable log file provided. Please report this to the developer.", err.message);
+            onError(
+                "Unprocessable log file provided. Please report this to the developer.",
+                err.message
+            );
         }
         return null;
     }
 };
 
-type LogViewerProps = {
-}
+type LogViewerProps = {};
 
 export const LogViewer = (_props: LogViewerProps) => {
     const currentLog = useAppSelector((state) => state.logs.currentLog);
-    const [error, setError] = useState<{ error: string | null, detail: string | undefined } | null>(null);
-    const [showDetail, setShowDetail] = useState(false);
+    const [error, setError] = useState<{
+        error: string | null;
+        detail: string | undefined;
+    } | null>(null);
 
     const parsedLogEntries = useMemo(() => {
-        const result = tryParseLogFile(currentLog, (error, detail) => setError({ error, detail }));
+        const result = tryParseLogFile(currentLog, (error, detail) =>
+            setError({ error, detail })
+        );
         if (!!result) {
             setError(null);
         }
         return result;
     }, [currentLog]);
 
-    const panes = [
-        {
-            menuItem: 'Raw Entries', render: () => <Tab.Pane>
-                {parsedLogEntries && <RawLogViewer entries={parsedLogEntries} />}
-            </Tab.Pane>
-        }
-    ]
-
     if (error) {
-        return <Message error>
-            <Message.Header>There was a problem with the log file:</Message.Header>
-            <p>{error.error}</p>
-            {error.detail && <Accordion>
-                <Accordion.Title onClick={() => setShowDetail(!showDetail)}>More details</Accordion.Title>
-                <Accordion.Content active={showDetail}>{error.detail}</Accordion.Content>
-            </Accordion>}
-        </Message>
+        return (
+            <Alert color="red" title="Invalid log file">
+                <p>{error.error}</p>
+                {error.detail && (
+                    <Accordion>
+                        <Accordion.Item value="moreDetails">
+                            <Accordion.Control>More details</Accordion.Control>
+                            <Accordion.Panel>{error.detail}</Accordion.Panel>
+                        </Accordion.Item>
+                    </Accordion>
+                )}
+            </Alert>
+        );
     }
 
-    return <>
-        <p>Analyzing a log!</p>
-        <Tab panes={panes} />
-    </>
-}
+    if (!parsedLogEntries) {
+        return null;
+    }
+
+    return (
+        <>
+            <p>Analyzing a log!</p>
+            <Tabs defaultValue="rawEntries">
+                <Tabs.List>
+                    <Tabs.Tab value="map">Map</Tabs.Tab>
+                    <Tabs.Tab value="rawEntries">Raw Entries</Tabs.Tab>
+                </Tabs.List>
+                <Tabs.Panel value="map" pt="xs">
+                    <MapViewer entries={parsedLogEntries} />
+                </Tabs.Panel>
+                <Tabs.Panel value="rawEntries" pt="xs">
+                    <RawLogViewer entries={parsedLogEntries} />
+                </Tabs.Panel>
+            </Tabs>
+        </>
+    );
+};

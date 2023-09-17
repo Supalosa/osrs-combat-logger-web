@@ -1,20 +1,15 @@
 :root {
-  --dark-grey: #333333;
-  --mid-grey: #666666;
-  --light-grey: #999999;
+    --dark-grey: #333333;
+    --mid-grey: #666666;
+    --light-grey: #999999;
 }
 
 #root {
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-body {
-  /* Overwrite semantic-ui 'center' which scuffs scrolling for long tables */
-  place-items: stretch normal !important;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
 }
 
 .main-content {
-  margin-top: 6em;
+    margin-top: 6em;
 }

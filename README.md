@@ -14,4 +14,3 @@ Clone the repo, then:
     npm run dev
 
 The site will be hosted at https://osrs-combat-logs.netlify.app/.
-

@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { LogLine, LogTypes } from "../logs/Log";
 import { Container, Table } from "@mantine/core";
 import { range, useShallowEffect } from "@mantine/hooks";
+import { InstanceState, MapComponent, Chunk } from "./MapComponent";
 
 const PNG_PIXELS_PER_TILE = 4;
 const TILES_PER_CHUNK = 8;
@@ -15,23 +16,6 @@ const CANVAS_SCALE = 2;
 
 type MapViewerProps = {
     entries: LogLine[];
-};
-
-type Chunk = {
-    x: number;
-    y: number;
-    rotation: number;
-    plane: number;
-    present: boolean;
-    regionId: number;
-    // offset from the top left of the region tile
-    imageOffsetX: number;
-    imageOffsetY: number;
-};
-
-type InstanceState = {
-    // Chunks[Plane][X][Y]
-    chunks: Chunk[][][];
 };
 
 export const MapViewer = (props: MapViewerProps) => {
@@ -90,6 +74,14 @@ export const MapViewer = (props: MapViewerProps) => {
     }, [entries]);
     return (
         <>
+            <MapComponent
+                instance={knownChunks[0]}
+                width={800}
+                height={600}
+                x={0}
+                y={0}
+                plane={3}
+            />
             <strong>Chunks:</strong>
             {knownChunks.map(({ chunks }) => {
                 return (

@@ -1,5 +1,5 @@
 import { useShallowEffect } from "@mantine/hooks";
-import { useRef } from "react";
+import { useRef, useState, MouseEvent, useEffect } from "react";
 
 const PNG_PIXELS_PER_TILE = 4;
 const TILES_PER_CHUNK = 8;
@@ -37,11 +37,36 @@ type MapComponentProps = {
     plane: number;
 };
 
+type MousePosition = {
+    x: number;
+    y: number;
+};
+
 export const MapComponent = (props: MapComponentProps) => {
     const { instance, width, height, x, y, plane } = props;
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const canvasScale = 1;
+    const [offsetX, setOffsetX] = useState(x);
+    const [offsetY, setOffsetY] = useState(y);
+    const [dragging, setDragging] = useState<MousePosition | null>(null);
+
+    const [canvasScale, setCanvasScale] = useState(1.0);
+
+    useEffect(() => {
+        const eventListener = (e: WheelEvent) => {
+            console.log("scroll ", e, canvasScale);
+            if (e.deltaY < 0) {
+                setCanvasScale(Math.min(4.0, canvasScale + 0.25));
+            } else {
+                setCanvasScale(Math.max(1.0, canvasScale - 0.25));
+            }
+            e.preventDefault();
+        };
+        canvasRef.current?.addEventListener("wheel", eventListener);
+        return () => {
+            canvasRef.current?.removeEventListener("wheel", eventListener);
+        };
+    }, [canvasScale]);
 
     useShallowEffect(() => {
         const ref = canvasRef.current;
@@ -50,7 +75,11 @@ export const MapComponent = (props: MapComponentProps) => {
         if (!context) {
             return;
         }
+
+        context.clearRect(0, 0, width, height);
+
         const { canvas } = context;
+        ``;
 
         const drawTile = (
             plane: number,
@@ -123,8 +152,8 @@ export const MapComponent = (props: MapComponentProps) => {
 
         const planeData = instance.chunks[plane];
 
-        const originX = 0;
-        const originY = canvas.height;
+        const originX = offsetX;
+        const originY = offsetY + canvas.height;
         const instanceWidthChunks = planeData.length;
         const instanceHeightChunks = planeData[0].length;
 
@@ -144,8 +173,12 @@ export const MapComponent = (props: MapComponentProps) => {
                         regionId,
                         imageOffsetX,
                         imageOffsetY,
-                        originX + xx * PNG_CHUNK_SIZE_PIXELS * canvasScale,
-                        originY - yy * PNG_CHUNK_SIZE_PIXELS * canvasScale,
+                        originX +
+                            xx * PNG_CHUNK_SIZE_PIXELS * canvasScale +
+                            (PNG_CHUNK_SIZE_PIXELS / 2) * canvasScale,
+                        originY -
+                            yy * PNG_CHUNK_SIZE_PIXELS * canvasScale -
+                            (PNG_CHUNK_SIZE_PIXELS / 2) * canvasScale,
                         rotation,
                         canvasScale
                     );
@@ -160,7 +193,39 @@ export const MapComponent = (props: MapComponentProps) => {
             instanceWidthChunks * PNG_CHUNK_SIZE_PIXELS * canvasScale,
             -instanceHeightChunks * PNG_CHUNK_SIZE_PIXELS * canvasScale
         );
-    }, [instance, x, y, plane]);
+    }, [dragging, canvasScale, instance, x, y, plane]);
 
-    return <canvas ref={canvasRef} width={width} height={height} />;
+    const getMousePosition = (evt: MouseEvent) => {
+        return { x: evt.clientX, y: evt.clientY };
+    };
+
+    const handleMouseDown = (evt: MouseEvent<HTMLCanvasElement>) =>
+        setDragging(getMousePosition(evt));
+
+    const handleMouseUp = () => setDragging(null);
+
+    const handleMouseMove = (evt: MouseEvent<HTMLCanvasElement>) => {
+        if (!dragging) {
+            return;
+        }
+        const pos = getMousePosition(evt);
+        const diffX = pos.x - dragging.x;
+        const diffY = pos.y - dragging.y;
+
+        setOffsetX(offsetX + diffX);
+        setOffsetY(offsetY + diffY);
+
+        setDragging(pos);
+    };
+
+    return (
+        <canvas
+            ref={canvasRef}
+            width={width}
+            height={height}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+        />
+    );
 };

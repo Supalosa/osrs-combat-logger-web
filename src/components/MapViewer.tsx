@@ -82,54 +82,6 @@ export const MapViewer = (props: MapViewerProps) => {
                 y={0}
                 plane={3}
             />
-            <strong>Chunks:</strong>
-            {knownChunks.map(({ chunks }) => {
-                return (
-                    <Container>
-                        {chunks.map((data, plane) => {
-                            const cols = data.length;
-                            const rows = data[0].length;
-                            return (
-                                <>
-                                    <u>Plane: {plane}</u>
-                                    <br />
-                                    <Table>
-                                        <tbody>
-                                            {/* y is inverted */}
-                                            {range(0, rows - 1).map((row) => {
-                                                const y = rows - row - 1;
-                                                return (
-                                                    <tr>
-                                                        {range(0, cols - 1).map(
-                                                            (col) => {
-                                                                return (
-                                                                    <td>
-                                                                        {
-                                                                            <Chunk
-                                                                                chunk={
-                                                                                    data[
-                                                                                        col
-                                                                                    ][
-                                                                                        y
-                                                                                    ]
-                                                                                }
-                                                                            />
-                                                                        }
-                                                                    </td>
-                                                                );
-                                                            }
-                                                        )}
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </Table>
-                                </>
-                            );
-                        })}
-                    </Container>
-                );
-            })}
         </>
     );
 };

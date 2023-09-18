@@ -1,12 +1,13 @@
 import { Image } from "@mantine/core";
+import { LogLine, LogTypes } from "../logs/Log";
 
 type RawLogEntryProps = {
-    entry: any;
+    entry: LogLine;
 };
 
-const renderExtra = (entry: any) => {
+const renderExtra = (entry: LogLine) => {
     const { type, payload } = entry;
-    if (type === "LogPlayerMoved") {
+    if (type === LogTypes.LOG_PLAYER_MOVED) {
         const { plane, regionId } = payload.newPosition;
         return (
             <Image

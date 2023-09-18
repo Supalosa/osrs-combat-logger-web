@@ -1,8 +1,9 @@
 import { Table } from "@mantine/core";
 import { RawLogEntry } from "./RawLogEntry";
+import { LogLine } from "../logs/Log";
 
 type RawLogViewerProps = {
-    entries: any[];
+    entries: LogLine[];
 };
 
 export const RawLogViewer = (props: RawLogViewerProps) => {

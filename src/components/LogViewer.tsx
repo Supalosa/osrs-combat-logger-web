@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { RawLogViewer } from "./RawLogViewer";
 import { Accordion, Alert, Tabs } from "@mantine/core";
 import { MapViewer } from "./MapViewer";
+import { LogLine } from "../logs/Log";
 
 const tryParseLogFile = (
     log: string | null,
@@ -13,7 +14,7 @@ const tryParseLogFile = (
         return null;
     }
     try {
-        return log?.split("\n").map((el) => JSON.parse(el));
+        return log?.split("\n").map((el) => JSON.parse(el)) as LogLine[];
     } catch (err: unknown) {
         if (typeof err === "string") {
             onError(err);

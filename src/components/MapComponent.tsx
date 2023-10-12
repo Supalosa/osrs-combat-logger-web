@@ -122,7 +122,7 @@ export const MapComponent = (props: MapComponentProps) => {
 
                 context.drawImage(image, 0, 0);
                 context.restore();
-
+                /*
                 if (false) {
                     context.strokeStyle = "#FF0000";
                     context.strokeRect(
@@ -132,6 +132,7 @@ export const MapComponent = (props: MapComponentProps) => {
                         PNG_CHUNK_SIZE_PIXELS * scale
                     );
                 }
+                */
             };
         };
 
@@ -217,6 +218,10 @@ export const MapComponent = (props: MapComponentProps) => {
 
         setDragging(pos);
     };
+
+    if (!instance) {
+        return null;
+    }
 
     return (
         <canvas

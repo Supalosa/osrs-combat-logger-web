@@ -1,6 +1,6 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { LogLine, LogTypes } from "../logs/Log";
-import { Container, Table } from "@mantine/core";
+import { Button, Container, Flex, Table } from "@mantine/core";
 import { range, useShallowEffect } from "@mantine/hooks";
 import { InstanceState, MapComponent, Chunk } from "./MapComponent";
 
@@ -20,6 +20,8 @@ type MapViewerProps = {
 
 export const MapViewer = (props: MapViewerProps) => {
     const { entries } = props;
+
+    const [instanceIndex, setInstanceIndex] = useState(0);
 
     const knownChunks = useMemo(() => {
         const instanceLogLines = entries?.filter(
@@ -73,115 +75,35 @@ export const MapViewer = (props: MapViewerProps) => {
         return result;
     }, [entries]);
     return (
-        <>
+        <Flex direction="column">
+            <Container>
+                <Button
+                    onClick={() => {
+                        if (instanceIndex > 0) {
+                            setInstanceIndex(instanceIndex - 1);
+                        }
+                    }}
+                >
+                    Decrement {instanceIndex}
+                </Button>
+                <Button
+                    onClick={() => {
+                        if (instanceIndex < knownChunks.length) {
+                            setInstanceIndex(instanceIndex + 1);
+                        }
+                    }}
+                >
+                    Increment {instanceIndex}
+                </Button>
+            </Container>
             <MapComponent
-                instance={knownChunks[0]}
+                instance={knownChunks[instanceIndex]}
                 width={800}
                 height={600}
                 x={0}
                 y={0}
                 plane={3}
             />
-        </>
-    );
-};
-
-type ChunkProps = {
-    chunk: Chunk;
-};
-
-const Chunk = (props: ChunkProps) => {
-    const { chunk } = props;
-
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    useShallowEffect(() => {
-        const {
-            regionId,
-            imageOffsetX,
-            imageOffsetY,
-            rotation,
-            plane,
-            present,
-        } = chunk;
-        const ref = canvasRef.current;
-
-        const context = ref?.getContext("2d");
-        if (!context) {
-            return;
-        }
-        const { canvas } = context;
-
-        context.fillStyle = "#000000";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        if (!present) {
-            return;
-        }
-
-        const image = new Image();
-        image.src = `https://cdn-osrs-combat-logs.netlify.app/${plane}/region-${regionId}.png`;
-
-        image.onload = () => {
-            // rotation 0 = 0 degrees
-            // rotation 1 = rotate 90 degrees counter clockwise
-            // rotation 2 = 180 degrees ccw
-            // rotation 3 = 270 degrees ccw
-            const angle = (rotation * Math.PI) / 2;
-
-            context.save();
-            context.beginPath();
-            context.rect(
-                canvas.width / 2 - (PNG_CHUNK_SIZE_PIXELS / 2) * CANVAS_SCALE,
-                canvas.height / 2 - (PNG_CHUNK_SIZE_PIXELS / 2) * CANVAS_SCALE,
-                PNG_CHUNK_SIZE_PIXELS * CANVAS_SCALE,
-                PNG_CHUNK_SIZE_PIXELS * CANVAS_SCALE
-            );
-            context.clip();
-
-            const middleX = imageOffsetX + PNG_CHUNK_SIZE_PIXELS / 2;
-            const middleY = imageOffsetY - PNG_CHUNK_SIZE_PIXELS / 2;
-
-            // Where to place it
-            context.translate(canvas.width / 2, canvas.height / 2);
-            context.rotate(angle);
-            context.scale(CANVAS_SCALE, CANVAS_SCALE);
-            // Where to rotate from
-            context.translate(-middleX, -middleY);
-
-            context.drawImage(image, 0, 0);
-
-            context.restore();
-            /*context.strokeStyle = "#FF0000";
-            context.strokeRect(
-                0,
-                0,
-                PNG_CHUNK_SIZE_PIXELS,
-                PNG_CHUNK_SIZE_PIXELS
-            );*/
-        };
-    }, [chunk]);
-
-    return (
-        <div>
-            {false && chunk.present && (
-                <>
-                    <div>
-                        {chunk.x},{chunk.y} @ {chunk.plane} rotated at{" "}
-                        {chunk.rotation}
-                    </div>
-                    <div>
-                        {chunk.imageOffsetX},{chunk.imageOffsetY}
-                    </div>
-                    <div>{chunk.regionId}</div>
-                </>
-            )}
-            {
-                <canvas
-                    ref={canvasRef}
-                    width={PNG_CHUNK_SIZE_PIXELS * CANVAS_SCALE}
-                    height={PNG_CHUNK_SIZE_PIXELS * CANVAS_SCALE}
-                />
-            }
-        </div>
+        </Flex>
     );
 };

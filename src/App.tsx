@@ -2,7 +2,7 @@ import { LogViewer } from "./components/LogViewer";
 import { LogInput } from "./components/LogInput";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { setLog } from "./redux/localLogs";
-import { AppShell, Container, Divider, Header, Navbar } from "@mantine/core";
+import { AppShell, Container, Divider, Header } from "@mantine/core";
 
 import "./App.css";
 

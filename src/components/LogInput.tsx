@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Input, Progress } from "@mantine/core";
+import { Button, Flex, Input, Progress } from "@mantine/core";
 import { useState } from "react";
 
 type LogInputProps = {

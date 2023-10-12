@@ -3,13 +3,7 @@ import { useRef, useState, MouseEvent, useEffect } from "react";
 
 const PNG_PIXELS_PER_TILE = 4;
 const TILES_PER_CHUNK = 8;
-const CHUNKS_PER_REGION = 8;
 const PNG_CHUNK_SIZE_PIXELS = TILES_PER_CHUNK * PNG_PIXELS_PER_TILE;
-
-const PNG_REGION_TILE_SIZE_PIXELS =
-    PNG_PIXELS_PER_TILE * CHUNKS_PER_REGION * TILES_PER_CHUNK;
-
-const CANVAS_SCALE = 1;
 
 export type Chunk = {
     x: number;

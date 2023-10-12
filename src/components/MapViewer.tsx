@@ -1,18 +1,14 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { LogLine, LogTypes } from "../logs/Log";
-import { Button, Container, Flex, Table } from "@mantine/core";
-import { range, useShallowEffect } from "@mantine/hooks";
+import { Button, Container, Flex } from "@mantine/core";
 import { InstanceState, MapComponent, Chunk } from "./MapComponent";
 
 const PNG_PIXELS_PER_TILE = 4;
 const TILES_PER_CHUNK = 8;
 const CHUNKS_PER_REGION = 8;
-const PNG_CHUNK_SIZE_PIXELS = TILES_PER_CHUNK * PNG_PIXELS_PER_TILE;
 
 const PNG_REGION_TILE_SIZE_PIXELS =
     PNG_PIXELS_PER_TILE * CHUNKS_PER_REGION * TILES_PER_CHUNK;
-
-const CANVAS_SCALE = 2;
 
 type MapViewerProps = {
     entries: LogLine[];
